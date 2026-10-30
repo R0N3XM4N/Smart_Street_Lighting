@@ -1,10 +1,5 @@
 # Smart Street Lighting
 
-A DBMS Level 3 project with a role-aware Next.js operations dashboard, MySQL
-transactional records, and MongoDB audit telemetry. The running application is
-in [`next-app/`](./next-app/); the setup scripts prepare both databases and
-launch this application.
-
 ## Requirements
 
 - Windows PowerShell
