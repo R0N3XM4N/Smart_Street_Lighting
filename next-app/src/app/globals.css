@@ -1,0 +1,550 @@
+:root {
+  color-scheme: light;
+  --text: #222;
+  --muted: #666;
+  --line: #d9dedb;
+  --surface: #fff;
+  --page: #f3f5f4;
+  --green: #2f6d4e;
+  --green-dark: #25553e;
+  --red: #a33b32;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+a {
+  color: var(--green-dark);
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  width: min(1120px, calc(100% - 32px));
+  min-height: 64px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.site-title {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-inner nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.header-inner nav a {
+  color: #444;
+  text-decoration: none;
+}
+
+.header-inner nav a:hover,
+.header-inner nav a:focus-visible {
+  text-decoration: underline;
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+}
+
+.page-content {
+  width: min(1120px, calc(100% - 32px));
+  margin: 28px auto 48px;
+}
+
+.page-heading,
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-heading {
+  margin-bottom: 20px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 4px;
+  font-size: 28px;
+  line-height: 1.25;
+}
+
+h2 {
+  margin-bottom: 4px;
+  font-size: 20px;
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.page-heading p,
+.panel-heading p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.metric-card,
+.panel,
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.metric-card {
+  min-height: 90px;
+  padding: 14px 16px;
+}
+
+.metric-card > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.metric-card strong {
+  font-size: 23px;
+}
+
+.metric-card small {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.panel {
+  margin-bottom: 18px;
+  padding: 20px;
+  scroll-margin-top: 16px;
+}
+
+.panel-heading {
+  margin-bottom: 16px;
+}
+
+.panel-heading p {
+  font-size: 13px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8ebe9;
+  vertical-align: middle;
+}
+
+th {
+  background: #f6f7f6;
+  color: #555;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+td {
+  font-size: 14px;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cell-subtext {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.status-pill,
+.mongo-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f7f8f7;
+  color: #444;
+  font-size: 12px;
+}
+
+.status-pill.online,
+.mongo-badge.available {
+  border-color: #b6d2c0;
+  background: #edf5ef;
+  color: #275b3b;
+}
+
+.status-pill.offline,
+.mongo-badge.unavailable,
+.mongo-badge.not_configured {
+  border-color: #e2c3bf;
+  background: #fbf0ef;
+  color: #8b332c;
+}
+
+.empty-row {
+  padding: 20px 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.button,
+.text-button,
+.delete-button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button:hover,
+.text-button:hover,
+.delete-button:hover {
+  background: #f1f3f2;
+}
+
+.button:disabled,
+.delete-button:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+
+.button.primary {
+  border-color: var(--green);
+  background: var(--green);
+  color: white;
+}
+
+.button.primary:hover {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+}
+
+.button.secondary {
+  background: #fff;
+}
+
+.text-button {
+  color: var(--green-dark);
+}
+
+.delete-button {
+  min-height: 30px;
+  padding: 3px 8px;
+  color: var(--red);
+}
+
+.inline-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.inline-form b {
+  margin-right: auto;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #c8cfcb;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--text);
+}
+
+input:focus,
+select:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #71a184;
+  outline-offset: 2px;
+}
+
+.inline-form select,
+.inline-form input {
+  width: auto;
+  min-width: 180px;
+}
+
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.action-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fafbfa;
+}
+
+.action-form label,
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.action-form button {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.mongo-description {
+  margin: -4px 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.search-form {
+  display: flex;
+  max-width: 520px;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.aggregation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.aggregation-list span {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f7f8f7;
+  font-size: 13px;
+}
+
+.mongo-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f7f8f7;
+}
+
+.mongo-callout span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.notice {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid #b9cbbf;
+  border-radius: 4px;
+  background: #f1f6f2;
+}
+
+.notice.error {
+  border-color: #e2c3bf;
+  background: #fbf0ef;
+  color: #842f29;
+}
+
+.footer {
+  padding: 4px 0 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.login-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: min(400px, 100%);
+  padding: 26px;
+}
+
+.login-card h1 {
+  font-size: 24px;
+}
+
+.login-card > p {
+  margin-bottom: 20px;
+  color: var(--muted);
+}
+
+.stack-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form .button {
+  width: 100%;
+}
+
+.login-foot {
+  margin: 16px 0 0;
+  font-size: 12px;
+}
+
+@media (max-width: 800px) {
+  .header-inner {
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    padding: 12px 0;
+  }
+
+  .header-inner nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .account-info {
+    margin-left: auto;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forms-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .page-content,
+  .header-inner {
+    width: calc(100% - 24px);
+  }
+
+  .page-content {
+    margin-top: 20px;
+  }
+
+  .page-heading,
+  .panel-heading {
+    align-items: flex-start;
+  }
+
+  .page-heading {
+    flex-direction: column;
+  }
+
+  .metrics-grid {
+    gap: 8px;
+  }
+
+  .metric-card {
+    min-height: 82px;
+    padding: 11px;
+  }
+
+  .metric-card strong {
+    font-size: 19px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .inline-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .inline-form select,
+  .inline-form input,
+  .inline-form .button {
+    width: 100%;
+  }
+}

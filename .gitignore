@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/.next/
+**/coverage/
+*.log
+*.pid
+*.tsbuildinfo
+*.zip
+mongodb/data/
+.DS_Store
