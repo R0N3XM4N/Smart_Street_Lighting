@@ -18,14 +18,18 @@ demo; the dashboard can display its unavailable state if it later goes offline.
 
 ## Start the entire project
 
-From the repository folder, run:
+Double-click `start_project.bat` in the repository folder. Confirm setup by
+typing `YES`, then enter your MySQL administrator password when prompted. Keep
+the terminal window open while you use the dashboard.
+
+Alternatively, run the PowerShell script directly from the repository folder:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\start_project.ps1
 ```
 
-Confirm setup by typing `YES`, then enter your MySQL administrator password
-at the secure prompt. The launcher:
+The batch file simply calls `start_project.ps1`; it does not replace the setup
+script. The launcher:
 
 1. Creates missing schemas, applies the SQL features, and refreshes the known
    demo seed rows in MySQL. Other records are preserved.
@@ -119,6 +123,7 @@ build before starting the website.
 ## Important files
 
 - `start_project.ps1` — full setup and website launcher
+- `start_project.bat` — double-click launcher for Windows
 - `run_project.ps1` — MySQL schema/seed setup
 - `next-app/src/` — Next.js pages, dashboard, API routes, and database clients
 - `next-app/sql/` — live application's MySQL schema, sample data, analytics
