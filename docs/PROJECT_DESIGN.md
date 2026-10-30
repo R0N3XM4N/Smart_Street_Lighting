@@ -137,7 +137,10 @@ SHA-256-hashed before storage; cookies are HTTP-only, same-site, and time
 limited. Mutating browser requests require a same-origin `Origin` header.
 Viewers can read dashboard/telemetry data; operators can write, change
 brightness, and delete schedules. The setup creates a least-privilege
-MySQL account and fresh demo operator/viewer accounts.
+MySQL account and fresh demo operator/viewer accounts. The local demo launcher
+also enables operator selection on the registration form while binding the
+website to `127.0.0.1`; deployments without that explicit demo flag can register
+viewer accounts only.
 
 ## Run and verify
 

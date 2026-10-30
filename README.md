@@ -58,6 +58,13 @@ existing ignored `.env.local`:
 powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -SkipDatabaseSetup
 ```
 
+To create an operator account with a password you choose, double-click
+`start_project.bat` to run the local demo, then choose **Create an account** on
+the sign-in page and select **Operator**. This demo-only option is enabled by
+the local launcher; normal registrations remain viewers when the flag is off.
+Do not expose demo mode to an untrusted network or use it for a public
+deployment.
+
 If port 3000 is already occupied, choose another port:
 
 ```powershell
@@ -70,7 +77,9 @@ The database-only setup script is also available as
 
 ## Demo walkthrough
 
-1. Sign in as `demo-operator` using the password printed by the launcher.
+1. Choose **Create an account** on the sign-in page, select **Operator**, and
+   set a password you can remember for the demo. You can also register as a
+   viewer to demonstrate read-only access.
 2. Show the MySQL connection, seeded poles, readings, schedules, summary
    metrics, and MongoDB telemetry search/aggregation on the dashboard.
 3. Add a pole, add a sensor reading, create/delete a schedule, and change
@@ -93,8 +102,9 @@ The database-only setup script is also available as
   activity.
 - **Next.js App Router** serves the dashboard and API. Passwords are bcrypt
   hashes, opaque session tokens are hashed in MySQL, cookies are HTTP-only,
-  and browser writes enforce same-origin checks. Viewers can read; operators
-  can mutate data.
+  and browser writes enforce same-origin checks. Users can register for
+  viewer access; the local demo launcher also enables operator registration.
+  Only operators can mutate data.
 - **SQL companion database (`smart_streetlight_grid`)** preserves the course
   SQL examples and demonstrates roles, indexes, analytics, views, a trigger,
   and a transaction procedure. It is not the database used by the dashboard.

@@ -1,7 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { validateBrightness, validatePole, validateReading, validateSchedule } from "./validation";
+import {
+  validateBrightness, validatePole, validateReading, validateRegistration, validateSchedule,
+} from "./validation";
 
 describe("request validation", () => {
+  it("accepts valid registration credentials and trims the username", () => {
+    expect(validateRegistration({ username: "  demo-user_1  ", password: "a secure passphrase" }))
+      .toEqual({
+        ok: true,
+        value: { username: "demo-user_1", password: "a secure passphrase", role: "viewer" },
+      });
+    expect(validateRegistration({
+      username: "demo-operator", password: "a secure passphrase", role: "operator",
+    })).toMatchObject({ ok: true, value: { role: "operator" } });
+  });
+
+  it("rejects malformed registration usernames and short passwords", () => {
+    expect(validateRegistration({ username: "ab", password: "a secure passphrase" }).ok).toBe(false);
+    expect(validateRegistration({ username: "new-user", password: "short" }).ok).toBe(false);
+    expect(validateRegistration({ username: "bad name", password: "a secure passphrase" }).ok).toBe(false);
+    expect(validateRegistration({
+      username: "new-user", password: "a secure passphrase", role: "admin",
+    }).ok).toBe(false);
+  });
+
   it("accepts browser form pole fields and trims text", () => {
     expect(validatePole({ poleCode: " ST-1 ", location: " Main St ", zone: " East ", wattage: "120" }))
       .toEqual({ ok: true, value: { poleCode: "ST-1", location: "Main St", zone: "East", wattage: 120 } });

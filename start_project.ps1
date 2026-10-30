@@ -119,6 +119,9 @@ try {
 
     Push-Location $appDirectory
     try {
+        $env:DEMO_OPERATOR_REGISTRATION = "true"
+        $env:NEXT_PUBLIC_DEMO_OPERATOR_REGISTRATION = "true"
+
         if (-not (Test-Path -LiteralPath (Join-Path $appDirectory "node_modules\next"))) {
             Write-Host "Installing locked Next.js dependencies..."
             & npm.cmd ci

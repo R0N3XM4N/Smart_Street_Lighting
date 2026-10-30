@@ -3,6 +3,7 @@ import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import type { NextRequest } from "next/server";
 import { getPool } from "@/lib/db";
+import type { ResultSetHeader } from "mysql2/promise";
 
 export const SESSION_COOKIE = "streetlight_session";
 const SESSION_TTL_HOURS = Number(process.env.SESSION_TTL_HOURS ?? "12");
@@ -45,6 +46,40 @@ export async function createSession(userId: number): Promise<string> {
     [tokenDigest(token), userId, expiresAt],
   );
   return token;
+}
+
+export async function registerUser(
+  username: string,
+  password: string,
+  role: UserRole,
+): Promise<{ user: SessionUser; token: string }> {
+  if (!Number.isInteger(SESSION_TTL_HOURS) || SESSION_TTL_HOURS < 1 || SESSION_TTL_HOURS > 168) {
+    throw new Error("SESSION_TTL_HOURS must be between 1 and 168");
+  }
+  const passwordHash = await bcrypt.hash(password, 12);
+  const token = randomBytes(32).toString("base64url");
+  const expiresAt = new Date(Date.now() + SESSION_TTL_HOURS * 60 * 60 * 1000);
+  const connection = await getPool().getConnection();
+
+  try {
+    await connection.beginTransaction();
+    const [result] = await connection.execute<ResultSetHeader>(
+      "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
+      [username, passwordHash, role],
+    );
+    const user = { id: result.insertId, username, role };
+    await connection.execute(
+      "INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
+      [tokenDigest(token), user.id, expiresAt],
+    );
+    await connection.commit();
+    return { user, token };
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
 }
 
 export async function getSessionUser(request: NextRequest): Promise<SessionUser | null> {
