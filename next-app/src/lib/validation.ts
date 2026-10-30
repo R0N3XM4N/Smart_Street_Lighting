@@ -27,6 +27,12 @@ export type BrightnessInput = {
   brightness: number;
 };
 
+export type RegistrationInput = {
+  username: string;
+  password: string;
+  role: "viewer" | "operator";
+};
+
 export type ValidationResult<T> =
   | { ok: true; value: T }
   | { ok: false; error: string };
@@ -43,6 +49,27 @@ function numericValue(value: unknown): number {
   if (typeof value === "number") return value;
   if (typeof value === "string" && value.trim() !== "") return Number(value);
   return Number.NaN;
+}
+
+export function validateRegistration(value: unknown): ValidationResult<RegistrationInput> {
+  if (!isRecord(value) || typeof value.username !== "string" ||
+      !/^[A-Za-z0-9._-]{3,32}$/.test(value.username.trim()) ||
+      typeof value.password !== "string" || value.password.length < 12 ||
+      value.password.length > 200 ||
+      (value.role !== undefined && value.role !== "viewer" && value.role !== "operator")) {
+    return {
+      ok: false,
+      error: "Use a 3–32 character username (letters, numbers, ., _ or -) and a password of at least 12 characters.",
+    };
+  }
+  return {
+    ok: true,
+    value: {
+      username: value.username.trim(),
+      password: value.password,
+      role: value.role === "operator" ? "operator" : "viewer",
+    },
+  };
 }
 
 export function validatePole(value: unknown): ValidationResult<PoleInput> {

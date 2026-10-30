@@ -36,9 +36,13 @@ const emptyTelemetry: Telemetry = {
   recent: [], byAction: [], byHour: [],
 };
 
+const demoOperatorRegistrationEnabled =
+  process.env.NEXT_PUBLIC_DEMO_OPERATOR_REGISTRATION === "true";
+
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [checking, setChecking] = useState(true);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [data, setData] = useState<DashboardData | null>(null);
   const [telemetry, setTelemetry] = useState<Telemetry>(emptyTelemetry);
   const [query, setQuery] = useState("");
@@ -80,22 +84,35 @@ export default function Dashboard() {
     if (user) void loadData();
   }, [user, loadData]);
 
-  async function login(event: FormEvent<HTMLFormElement>) {
+  async function submitAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setMessage("");
     const values = new FormData(event.currentTarget);
+    const password = values.get("password");
+    const confirmPassword = values.get("confirmPassword");
+    if (authMode === "register" && password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      setBusy(false);
+      return;
+    }
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`/api/auth/${authMode}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ username: values.get("username"), password: values.get("password") }),
+        body: JSON.stringify({
+          username: values.get("username"),
+          password,
+          ...(authMode === "register"
+            ? { role: values.get("role") === "operator" ? "operator" : "viewer" }
+            : {}),
+        }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? "Login failed.");
+      if (!response.ok) throw new Error(result.error ?? "Authentication failed.");
       setUser(result.user);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Login failed.");
+      setMessage(error instanceof Error ? error.message : "Authentication failed.");
     } finally {
       setBusy(false);
     }
@@ -159,14 +176,79 @@ export default function Dashboard() {
       <main className="login-shell">
         <div className="login-card">
           <h1>Smart Street Lighting</h1>
-          <p>Sign in to view the lighting dashboard.</p>
+          <p>{authMode === "login" ? "Sign in to view the lighting dashboard." : "Create an account to view the dashboard."}</p>
           {message && <div className="notice error" role="alert">{message}</div>}
-          <form className="stack-form login-form" onSubmit={login}>
-            <label>Username<input name="username" autoComplete="username" required maxLength={100} /></label>
-            <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
-            <button className="button primary wide" disabled={busy}>{busy ? "Signing in..." : "Sign in"}</button>
+          <form className="stack-form login-form" onSubmit={submitAuth}>
+            <label>
+              Username
+              <input
+                name="username"
+                autoComplete="username"
+                required
+                minLength={authMode === "register" ? 3 : undefined}
+                maxLength={authMode === "register" ? 32 : 100}
+                pattern={authMode === "register" ? "(?:[A-Za-z0-9._]|-){3,32}" : undefined}
+                title={authMode === "register" ? "Use 3–32 letters, numbers, periods, underscores or hyphens." : undefined}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                name="password"
+                type="password"
+                autoComplete={authMode === "login" ? "current-password" : "new-password"}
+                required
+                minLength={authMode === "register" ? 12 : undefined}
+                maxLength={200}
+              />
+            </label>
+            {authMode === "register" && (
+              <>
+                {demoOperatorRegistrationEnabled && (
+                  <label>
+                    Account type
+                    <select name="role" defaultValue="viewer">
+                      <option value="viewer">Viewer (read-only)</option>
+                      <option value="operator">Operator (can change project data)</option>
+                    </select>
+                  </label>
+                )}
+                <label>
+                  Confirm password
+                  <input name="confirmPassword" type="password" autoComplete="new-password" required maxLength={200} />
+                </label>
+              </>
+            )}
+            <button className="button primary wide" disabled={busy}>
+              {busy ? (authMode === "login" ? "Signing in..." : "Creating account...") :
+                (authMode === "login" ? "Sign in" : "Create account")}
+            </button>
           </form>
-          <p className="login-foot">Use the demo account provided by the project setup.</p>
+          <p className="login-foot">
+            {authMode === "login" ? "New here? " : "Already have an account? "}
+            <button
+              className="text-button"
+              type="button"
+              onClick={() => {
+                setAuthMode(authMode === "login" ? "register" : "login");
+                setMessage("");
+              }}
+            >
+              {authMode === "login" ? "Create an account" : "Sign in"}
+            </button>
+          </p>
+          {authMode === "register" && !demoOperatorRegistrationEnabled && (
+            <p className="login-foot">
+              New accounts have viewer access. Usernames must be 3–32 letters, numbers, periods,
+              underscores or hyphens; passwords must be at least 12 characters.
+            </p>
+          )}
+          {authMode === "register" && demoOperatorRegistrationEnabled && (
+            <p className="login-foot">
+              Demo mode: operator accounts can change project data. Usernames must be 3–32 letters,
+              numbers, periods, underscores or hyphens; passwords must be at least 12 characters.
+            </p>
+          )}
         </div>
       </main>
     );
