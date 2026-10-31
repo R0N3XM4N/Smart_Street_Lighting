@@ -38,6 +38,7 @@ const emptyTelemetry: Telemetry = {
 
 const demoOperatorRegistrationEnabled =
   process.env.NEXT_PUBLIC_DEMO_OPERATOR_REGISTRATION === "true";
+const readOnlyDemoEnabled = process.env.NEXT_PUBLIC_READ_ONLY_DEMO === "true";
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -69,6 +70,12 @@ export default function Dashboard() {
   }, [query]);
 
   useEffect(() => {
+    if (readOnlyDemoEnabled) {
+      setUser({ id: 0, username: "Demo visitor", role: "viewer" });
+      setChecking(false);
+      return;
+    }
+
     fetch("/api/auth/me", { cache: "no-store" })
       .then(async (response) => {
         if (response.ok) {
@@ -269,8 +276,8 @@ export default function Dashboard() {
             <a href="#telemetry">Activity log</a>
           </nav>
           <div className="account-info">
-            <span>{user.username} ({user.role})</span>
-            <button className="button secondary" onClick={logout}>Sign out</button>
+            <span>{readOnlyDemoEnabled ? "Read-only demo" : `${user.username} (${user.role})`}</span>
+            {!readOnlyDemoEnabled && <button className="button secondary" onClick={logout}>Sign out</button>}
           </div>
         </div>
       </header>

@@ -16,6 +16,16 @@ export async function requireUser(request: NextRequest) {
   return { user, response: null };
 }
 
+export async function requireUserOrDemoViewer(request: NextRequest) {
+  const user = await getSessionUser(request);
+  if (user) return { user, response: null };
+  if (process.env.LOCAL_READ_ONLY_DEMO === "true") return { user: null, response: null };
+  return {
+    user: null,
+    response: NextResponse.json({ error: "Authentication required." }, { status: 401 }),
+  };
+}
+
 export async function requireOperator(request: NextRequest) {
   const result = await requireUser(request);
   if (result.response) return result;

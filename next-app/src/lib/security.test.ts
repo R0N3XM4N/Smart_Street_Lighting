@@ -20,8 +20,15 @@ describe("same-origin mutation protection", () => {
     expect(isSameOrigin("https://lumen.example", "https://lumen.example")).toBe(true);
   });
 
+  it("treats localhost and loopback IP aliases as the same local origin", () => {
+    expect(isSameOrigin("http://localhost:3000", "http://127.0.0.1:3000")).toBe(true);
+    expect(isSameOrigin("http://127.0.0.1:3000", "http://localhost:3000")).toBe(true);
+  });
+
   it("rejects foreign, missing, and malformed origins", () => {
     expect(isSameOrigin("https://attacker.example", "https://lumen.example")).toBe(false);
+    expect(isSameOrigin("http://attacker.example:3000", "http://127.0.0.1:3000")).toBe(false);
+    expect(isSameOrigin("http://localhost:3001", "http://127.0.0.1:3000")).toBe(false);
     expect(isSameOrigin("https://lumen.example/extra", "https://lumen.example")).toBe(false);
     expect(isSameOrigin(null, "https://lumen.example")).toBe(false);
     expect(isSameOrigin("not-an-origin", "https://lumen.example")).toBe(false);

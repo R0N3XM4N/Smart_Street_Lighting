@@ -5,7 +5,8 @@ param(
     [int]$WebsitePort = 3000,
     [System.Security.SecureString]$MySqlPassword,
     [switch]$Force,
-    [switch]$SkipDatabaseSetup
+    [switch]$SkipDatabaseSetup,
+    [switch]$OperatorDemo
 )
 
 $ErrorActionPreference = "Stop"
@@ -38,6 +39,8 @@ if ($SkipDatabaseSetup) {
     if (-not (Test-Path -LiteralPath $localEnvironment -PathType Leaf)) {
         throw "No next-app\.env.local was found. Run without -SkipDatabaseSetup first."
     }
+} elseif ($OperatorDemo) {
+    throw "-OperatorDemo can only be used with -SkipDatabaseSetup."
 } elseif (-not $Force) {
     Write-Host "This applies schema/features and refreshes the seeded demo rows and demo passwords."
     Write-Host "Other project records are preserved; generated local database credentials are replaced."
@@ -68,7 +71,7 @@ try {
         $plainMysqlPassword = $credential.GetNetworkCredential().Password
         $databasePassword = New-RandomPassword
 
-        & (Join-Path $projectRoot "run_project.ps1") `
+        & (Join-Path $projectRoot "backup-launchers\run_project.ps1") `
             -MySqlHost $MySqlHost `
             -MySqlPort $MySqlPort `
             -MySqlUser $MySqlUser `
@@ -121,6 +124,12 @@ try {
     try {
         $env:DEMO_OPERATOR_REGISTRATION = "true"
         $env:NEXT_PUBLIC_DEMO_OPERATOR_REGISTRATION = "true"
+        if ($OperatorDemo) {
+            Remove-Item Env:LOCAL_READ_ONLY_DEMO, Env:NEXT_PUBLIC_READ_ONLY_DEMO -ErrorAction SilentlyContinue
+        } else {
+            $env:LOCAL_READ_ONLY_DEMO = "true"
+            $env:NEXT_PUBLIC_READ_ONLY_DEMO = "true"
+        }
 
         if (-not (Test-Path -LiteralPath (Join-Path $appDirectory "node_modules\next"))) {
             Write-Host "Installing locked Next.js dependencies..."
