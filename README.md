@@ -35,9 +35,9 @@ For a read-only demo, double-click `backup-launchers\run_dashboard.bat`. It
 reuses the existing database and local configuration instead of refreshing
 demo data or credentials.
 
-The local demo is read-only and bound to this computer. To make changes in the
-dashboard, use the normal authenticated app flow instead; do not expose the
-read-only demo mode to an untrusted network.
+The read-only launcher is bound to this computer. To demonstrate edits, use
+the editable operator demo below. Do not expose either local demo mode to an
+untrusted network.
 
 ### Editable operator demo
 
