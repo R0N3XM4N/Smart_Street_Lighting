@@ -13,7 +13,14 @@ export function isSameOrigin(origin: string | null, expectedOrigin: string): boo
   try {
     const requestOrigin = new URL(origin);
     const applicationOrigin = new URL(expectedOrigin);
-    return origin === requestOrigin.origin && requestOrigin.origin === applicationOrigin.origin;
+    if (origin !== requestOrigin.origin) return false;
+    if (requestOrigin.origin === applicationOrigin.origin) return true;
+
+    const loopbackHosts = new Set(["localhost", "127.0.0.1", "[::1]"]);
+    return requestOrigin.protocol === applicationOrigin.protocol &&
+      requestOrigin.port === applicationOrigin.port &&
+      loopbackHosts.has(requestOrigin.hostname) &&
+      loopbackHosts.has(applicationOrigin.hostname);
   } catch {
     return false;
   }

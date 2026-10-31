@@ -126,7 +126,7 @@ are in `next-app/sql/seed.sql`.
   indexes support the interface. A `$facet` aggregation returns recent events,
   counts by action, and hourly activity.
 - **Analytics:** `next-app/sql/analytics.sql` and
-  `sql file for project/07_analytics.sql` demonstrate joins, grouping,
+  `sql-companion/07_analytics.sql` demonstrate joins, grouping,
   aggregates, `HAVING`, ordering, derived tables, and subqueries.
 
 ## Application and security

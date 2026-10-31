@@ -10,7 +10,7 @@ must be verified by the students and instructor.
 | 2. Two-person team, each contributes to DB and application | Git history and team report | Ensure both students make genuine database **and** application contributions; do not fabricate commits |
 | 3. MySQL/PostgreSQL plus NoSQL/vector paradigm | MySQL operational schema and MongoDB telemetry feature | Start/test both databases and show actual Mongo documents and aggregation |
 | 4. ER diagram, relational schema, keys, relationships, constraints; NoSQL model | [`PROJECT_DESIGN.md`](./PROJECT_DESIGN.md) and `next-app/sql/schema.sql` | Review the model against the executable schema |
-| 5. SQL DDL, keys, constraints, indexes, views | `next-app/sql/schema.sql` and `sql file for project/` | Execute setup and show the database objects |
+| 5. SQL DDL, keys, constraints, indexes, views | `next-app/sql/schema.sql` and `sql-companion/` | Execute setup and show the database objects |
 | 6. INSERT, UPDATE, DELETE, SELECT and analytical queries | Application forms/routes, brightness procedure, schedule deletion, and both analytics SQL files | Demonstrate each operation, joins, grouping, aggregates, subqueries, and ordering |
 | 7. At least four SQL advanced concepts and one NoSQL/vector feature | Indexes, views, transaction procedure, trigger, MongoDB aggregation | Explain why each feature is used and show it running |
 | 8. Vector search (optional/recommended) | The project uses the permitted SQL + document-store option; vector search is not implemented | Add embeddings only if the instructor requires them and the team can justify them |

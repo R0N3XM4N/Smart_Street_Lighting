@@ -20,7 +20,7 @@ if (-not $mysqlShell) {
     }
 }
 
-$sqlDirectory = Join-Path $projectRoot "sql file for project"
+$sqlDirectory = Join-Path $projectRoot "sql-companion"
 $sqlFiles = @(
     (Join-Path $sqlDirectory "01_schema_extension.sql"),
     (Join-Path $sqlDirectory "02_indexes.sql"),

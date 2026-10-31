@@ -13,23 +13,55 @@ launch this application.
 - MongoDB Server 5.0 or newer, installed as a Windows service named `MongoDB`
 - MySQL administrator credentials for the local server
 
-Start the MySQL and MongoDB services before setup. MongoDB is used by the full
-demo; the dashboard can display its unavailable state if it later goes offline.
+Start the MySQL service before setup. The launcher starts the MongoDB Windows
+service if needed. MongoDB is used by the full demo; the dashboard can display
+its unavailable state if it later goes offline.
 
-## Start the entire project
+## Run the project
 
-Double-click `start_project.bat` in the repository folder. Confirm setup by
-typing `YES`, then enter your MySQL administrator password when prompted. Keep
-the terminal window open while you use the dashboard.
+### First run
 
-Alternatively, run the PowerShell script directly from the repository folder:
+1. Install the requirements above and start the MySQL service.
+2. Double-click `backup-launchers\start_project.bat` in the project folder.
+3. Type `YES` and enter your MySQL administrator password when prompted.
+4. Wait for setup and the build to finish.
+5. Open <http://localhost:3000>. The local launcher opens the dashboard in
+   read-only demo mode, so no website sign-in is needed. Keep the terminal
+   window open while using the dashboard.
+
+### Every run after setup
+
+For a read-only demo, double-click `backup-launchers\run_dashboard.bat`. It
+reuses the existing database and local configuration instead of refreshing
+demo data or credentials.
+
+The read-only launcher is bound to this computer. To demonstrate edits, use
+the editable operator demo below. Do not expose either local demo mode to an
+untrusted network.
+
+### Editable operator demo
+
+Double-click `run_operator_demo.bat` to launch the dashboard with editing
+enabled for authenticated operators. The first time, choose **Create an
+account**, select **Operator**, and set a password. The app signs you in
+immediately; later launches can reuse the browser session while it remains
+valid. Operator actions change the local demo database. This mode is intended
+for a trusted, local presentation only.
+
+The archived `start_project.bat` performs the full setup again, including
+refreshing seeded demo rows and demo passwords. Use it when you intentionally
+want to rerun setup, not for routine launches. It preserves other project
+records.
+
+Alternatively, run either launcher from PowerShell:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\start_project.ps1
+powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -SkipDatabaseSetup
+powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -SkipDatabaseSetup -OperatorDemo
 ```
 
-The batch file simply calls `start_project.ps1`; it does not replace the setup
-script. The launcher:
+The full setup launcher:
 
 1. Creates missing schemas, applies the SQL features, and refreshes the known
    demo seed rows in MySQL. Other records are preserved.
@@ -40,30 +72,15 @@ script. The launcher:
    dependencies if needed, type-checks and builds the app.
 5. Prints the one-time demo credentials and starts the dashboard.
 
-Open <http://localhost:3000>. Keep the PowerShell window open; press Ctrl+C to
-stop the server. The generated operator/viewer passwords are printed only in
-that terminal. The setup preserves existing database rows and MongoDB audit events. It
-refreshes seeded sample records, the generated MySQL service credentials, and
-the demo login passwords. Add `-Force` only when you intend to skip the
-confirmation prompt:
+The generated operator/viewer passwords are printed only in the setup
+terminal. Add `-Force` only when you intend to skip its confirmation prompt:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -Force
 ```
 
-After the first setup, start the app without recreating databases by using the
-existing ignored `.env.local`:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -SkipDatabaseSetup
-```
-
-To create an operator account with a password you choose, double-click
-`start_project.bat` to run the local demo, then choose **Create an account** on
-the sign-in page and select **Operator**. This demo-only option is enabled by
-the local launcher; normal registrations remain viewers when the flag is off.
-Do not expose demo mode to an untrusted network or use it for a public
-deployment.
+The operator demo launcher enables operator registration locally. Do not
+expose demo mode to an untrusted network or use it for a public deployment.
 
 If port 3000 is already occupied, choose another port:
 
@@ -71,9 +88,9 @@ If port 3000 is already occupied, choose another port:
 powershell -ExecutionPolicy Bypass -File .\start_project.ps1 -WebsitePort 3001
 ```
 
-The database-only setup script is also available as
-`.\run_project.ps1`; it prompts before refreshing seeded demo rows and accepts
-`-Force`.
+The database-only setup script is archived at
+`.\backup-launchers\run_project.ps1`; it prompts before refreshing seeded demo
+rows and accepts `-Force`.
 
 ## Demo walkthrough
 
@@ -132,18 +149,17 @@ build before starting the website.
 
 ## Important files
 
+- `run_operator_demo.bat` — editable local demo for operator accounts
 - `start_project.ps1` — full setup and website launcher
-- `start_project.bat` — double-click launcher for Windows
-- `run_project.ps1` — MySQL schema/seed setup
+- `backup-launchers/` — hidden setup and read-only launch shortcuts
 - `next-app/src/` — Next.js pages, dashboard, API routes, and database clients
 - `next-app/sql/` — live application's MySQL schema, sample data, analytics
-- `sql file for project/` — companion SQL examples used by setup
+- `sql-companion/` — companion SQL examples used by setup
 - `docs/` — project design and requirements checklist
 
-The older `website/` directory is a standalone prototype and is not launched
-by the full-project script. Do not upload `.env.local`, `.env` files, database
-data, `node_modules`, or build output. Never commit real passwords. Credentials
-previously shared in chat should be rotated before final deployment.
+Do not upload `.env.local`, `.env` files, database data, `node_modules`, or
+build output. Never commit real passwords. Credentials previously shared in
+chat should be rotated before final deployment.
 
 Course-specific facts such as title uniqueness, team approval/contributions,
 and originality must be confirmed by the students and instructor; repository

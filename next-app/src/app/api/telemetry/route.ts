@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser } from "@/lib/api";
+import { requireUserOrDemoViewer } from "@/lib/api";
 import { mongoAvailability, searchAuditEvents } from "@/lib/mongo";
 
 export const runtime = "nodejs";
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await requireUser(request);
+    const auth = await requireUserOrDemoViewer(request);
     if (auth.response) return auth.response;
     const search = request.nextUrl.searchParams.get("q")?.trim() ?? "";
     if (search.length > 100) {

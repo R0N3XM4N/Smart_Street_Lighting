@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0start_project.ps1" %*
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\start_project.ps1" %*
 set "exitCode=%ERRORLEVEL%"
 
 if not "%exitCode%"=="0" (
